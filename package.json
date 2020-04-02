@@ -1,0 +1,30 @@
+{
+  "name": "glasswall-common-zip-api",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc -w",
+    "prestart": "npm run build",
+    "start": "func start",
+    "test": "echo \"No tests yet...\""
+  },
+  "dependencies": {
+    "@azure/functions": "^1.0.2-beta2",
+    "@azure/storage-blob": "^12.1.1",
+    "@types/node": "^12.12.31",
+    "@typescript-eslint/eslint-plugin": "^2.26.0",
+    "@typescript-eslint/parser": "^2.26.0",
+    "applicationinsights": "^1.7.3",
+    "azure-storage": "^2.10.3",
+    "eslint": "^6.8.0",
+    "form-data": "^3.0.0",
+    "typescript": "^3.3.3",
+    "jszip": "^3.3.0"
+  },
+  "devDependencies": {
+    "@types/jszip": "^3.1.7",
+    "babel-eslint": "^10.1.0",
+    "eslint-plugin-react": "^7.19.0"
+  }
+}
