@@ -10,23 +10,29 @@ const handleZipRequest = async (context: Context, body: Readonly<ZipToBlobsBody>
     const sasService = new SasService(context);
     const zipService = new ZipService(context);
 
-    const zipBuffer = await sasService.download(body.inputZipSas);
+    const inputSasUrl = sasService.constructUrl(body.inputServiceSasSig, body.inputAccountName, body.inputContainer, body.inputBlob);
+    const zipBuffer = await sasService.download(inputSasUrl);
     const zipContent = await zipService.read(zipBuffer);
 
     if (zipContent.Error) {
         context.res.statusCode = 400;
     }
 
-    context.res.setHeader("content-type", "application/json");
-    context.res.body = JSON.stringify({
-        files: zipContent.ZipObjects.map(s => {
-            return {
-                Name: s.Name,
-                Value: s.getBase64()
-            };
-        })
+    Promise.all(zipContent.ZipObjects.map(zipObject => {
+        const SAS = sasService.constructUrl(
+            body.outputServiceSasSig,
+            body.outputAccountName,
+            body.outputContainer,
+            zipObject.Name
+        );
+
+        return sasService.upload(SAS, zipObject.Contents);
+    })).then(() => {
+        context.done();
+    }, (err) => {
+        context.log.error(err);
+        context.done();
     });
-    context.done();
 };
 
 const httpTrigger: AzureFunction = async function (context: Context, req: HttpRequest): Promise<void> {
@@ -36,8 +42,13 @@ const httpTrigger: AzureFunction = async function (context: Context, req: HttpRe
 };
 
 type ZipToBlobsBody = {
-    inputZipSas: string;
-    outputZipSas: string;
+    inputServiceSasSig: string;
+    inputAccountName: string;
+    inputContainer: string;
+    inputBlob: string;
+    outputServiceSasSig: string;
+    outputAccountName: string;
+    outputContainer: string;
 };
 
 export default httpTrigger;

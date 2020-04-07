@@ -16,5 +16,5 @@
       "name": "res"
     }
   ],
-  "scriptFile": "../dist/list-sas-zip-files/index.js"
+  "scriptFile": "../dist/zip-blobs-with-service-sas/index.js"
 }
