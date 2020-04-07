@@ -1,6 +1,6 @@
-import appInsights = require("applicationinsights");
-appInsights.setup("<instrumentation_key>");
-appInsights.start();
+// import appInsights = require("applicationinsights");
+// appInsights.setup("<instrumentation_key>");
+// appInsights.start();
 
 import { AzureFunction, Context, HttpRequest } from "@azure/functions";
 import { ZipService, ZipObject } from "../common/ZipHelper";
